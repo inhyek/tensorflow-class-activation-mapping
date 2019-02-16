@@ -3,7 +3,7 @@ from lenet_slim import le_net
 from utils import *
 
 batch_size = 256
-dataset_percentage = 1.0 # 1.0 takes 100k rows. 0.1 takes 10k rows.
+dataset_percentage = 0.1 # 1.0 takes 100k rows. 0.1 takes 10k rows.
 
 if __name__ == '__main__':
     [images_train, labels_train], [images_test, labels_test] = read_dataset(dataset_percentage)
@@ -18,16 +18,18 @@ if __name__ == '__main__':
     class_activation_map = get_class_map(0, top_conv, im_width)
 
     y_ = tf.placeholder(tf.int64, [None])
-    cross_entropy = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(y, y_))
+    cross_entropy = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=y_))
 
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
-    init = tf.initialize_all_variables()
+    # init = tf.initialize_all_variables()
+    init = tf.global_variables_initializer()
 
     correct_prediction = tf.equal(tf.argmax(y, 1), y_)
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-    saver = tf.train.Saver(tf.all_variables(), max_to_keep=10)
+    # saver = tf.train.Saver(tf.all_variables(), max_to_keep=10)
+    saver = tf.train.Saver(tf.global_variables(), max_to_keep=10)
 
     sess = tf.Session()
     sess.run(init)

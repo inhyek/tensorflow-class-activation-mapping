@@ -46,13 +46,13 @@ def read_dataset(percentage=1.0, cutoff=0.7):
             labels.append(int(label))
     labels = np.array(labels)
     images = []
-    n = len(glob('/tmp/img/*.png'))
+    n = len(glob('data/mnist_cluttered.tar/*.png'))
     assert n == len(labels)
     max_images = int(percentage * n)
     labels = labels[:max_images]
     print('found {} images.'.format(n))
     for i in range(1, n + 1):
-        f = '/tmp/img/img_{}.png'.format(i)
+        f = 'data/mnist_cluttered.tar/img_{}.png'.format(i)
         images.append(load_image(f))
         if i % 1000 == 0:
             print('read {} images.'.format(i))
